@@ -13,7 +13,16 @@ body {
   text-align: center;
 }
 
+.controls {
+  margin-bottom: 20px;
+}
+
+.controls label {
+  margin: 0 5px;
+}
+
 #countdown {
-  font-size: 3rem;
   margin-top: 20px;
+  font-size: 48px; /* default */
+  color: #61dafb;  /* default */
 }
