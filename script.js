@@ -5,22 +5,25 @@ window.addEventListener("DOMContentLoaded", () => {
   const fontSizeInput = document.getElementById("fontSize");
   const fontColorInput = document.getElementById("fontColor");
 
-  // Set target time when picked
-  timePicker.addEventListener("change", function() {
-    const [hours, minutes] = this.value.split(":").map(Number);
-    targetTime = { hours, minutes };
+  // ⏰ Pick target time
+  timePicker.addEventListener("input", function() {
+    if (this.value) {
+      const [hours, minutes] = this.value.split(":").map(Number);
+      targetTime = { hours, minutes };
+    }
   });
 
-  // Update style when font size changes
+  // 🔠 Live update font size
   fontSizeInput.addEventListener("input", () => {
     countdownEl.style.fontSize = fontSizeInput.value + "px";
   });
 
-  // Update color when color changes
+  // 🎨 Live update font color
   fontColorInput.addEventListener("input", () => {
     countdownEl.style.color = fontColorInput.value;
   });
 
+  // ⏳ Countdown logic
   function updateCountdown() {
     if (!targetTime) {
       countdownEl.textContent = "Choose a time ⏰";
@@ -48,3 +51,4 @@ window.addEventListener("DOMContentLoaded", () => {
   setInterval(updateCountdown, 1000);
   updateCountdown();
 });
+
