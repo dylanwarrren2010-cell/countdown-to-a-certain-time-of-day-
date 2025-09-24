@@ -1,7 +1,7 @@
 body {
   font-family: Arial, sans-serif;
-  background: #282c34;
-  color: #61dafb;
+  background: #222;
+  color: #fff;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -11,18 +11,24 @@ body {
 
 .container {
   text-align: center;
+  background: #333;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
 }
 
-.controls {
-  margin-bottom: 20px;
+button {
+  padding: 10px 20px;
+  font-size: 1.2rem;
+  margin: 10px;
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  background: #61dafb;
+  color: #000;
+  transition: transform 0.1s;
 }
 
-.controls label {
-  margin: 0 5px;
-}
-
-#countdown {
-  margin-top: 20px;
-  font-size: 48px; /* default */
-  color: #61dafb;  /* default */
+button:hover {
+  transform: scale(1.1);
 }
