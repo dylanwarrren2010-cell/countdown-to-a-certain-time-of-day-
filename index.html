@@ -3,69 +3,60 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Custom Countdown</title>
+  <title>Clicker Game + Countdown</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="container">
-    <h1>Countdown Timer</h1>
-    
-    <!-- Controls -->
-    <div class="controls">
+
+    <!-- Countdown -->
+    <div class="section">
+      <h1>Countdown Timer</h1>
       <label for="timePicker">Pick a time:</label>
       <input type="time" id="timePicker">
-
-      <label for="fontSize">Font Size:</label>
-      <input type="number" id="fontSize" value="48" min="10" max="200"> px
-
-      <label for="fontColor">Font Color:</label>
-      <input type="color" id="fontColor" value="#61dafb">
+      <div id="countdown">Choose a time ⏰</div>
     </div>
 
-    <!-- Countdown display -->
-    <div id="countdown">Choose a time ⏰</div>
-  </div>
-  <script src="script.js"></script>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Clicker Game</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <div class="container">
-    <h1>Clicker Game</h1>
-    <p>Score: <span id="score">0</span></p>
-    <button id="clickBtn">Click Me!</button>
+    <!-- Clicker Game -->
+    <div class="section">
+      <h1>Clicker Game</h1>
+      <div class="score-section">
+        <p>Score: <span id="score">0</span></p>
+        <button id="clickBtn">Click Me!</button>
+      </div>
 
-    <h2>Upgrades</h2>
-    <button id="upgradeBtn1">Buy Power Upgrade (Cost: 50)</button>
-    <p>Power: <span id="power">1</span> points per click</p>
+      <h2>Upgrades</h2>
+      <div class="upgrades">
+        <button id="upgradeBtn1">Buy Power Upgrade (Cost: 50)</button>
+        <p>Power: <span id="power">1</span> points per click</p>
 
-    <button id="upgradeBtn2">Buy Auto-Clicker (Cost: 200)</button>
-    <p>Auto-Clickers: <span id="autoClickers">0</span></p>
+        <button id="upgradeBtn2">Buy Auto-Clicker (Cost: 200)</button>
+        <p>Auto-Clickers: <span id="autoClickers">0</span></p>
 
-    <button id="upgradeBtn3">Buy Super Upgrade (Cost: 1000)</button>
-    <p>Multiplier: <span id="multiplier">1</span>x</p>
+        <button id="upgradeBtn3">Buy Super Upgrade (Cost: 1000)</button>
+        <p>Multiplier: <span id="multiplier">1</span>x</p>
+      </div>
 
-    <h2>Rebirth</h2>
-    <button id="rebirthBtn">Rebirth (Reset for +1 Rebirth Power)</button>
-    <p>Rebirths: <span id="rebirths">0</span></p>
+      <h2>Rebirth</h2>
+      <button id="rebirthBtn">Rebirth (Reset for +1 Rebirth Power)</button>
+      <p>Rebirths: <span id="rebirths">0</span></p>
+    </div>
+
+    <!-- Cosmetic Shop -->
+    <div class="section">
+      <h2>Cosmetic Shop</h2>
+      <div id="cosmetics" class="shop">
+        <button class="cosmeticBtn" data-cost="500" data-type="bg" data-value="#ff9999" disabled>Pink Background (500 pts)</button>
+        <button class="cosmeticBtn" data-cost="1000" data-type="bg" data-value="#99ff99" disabled>Green Background (1000 pts)</button>
+        <button class="cosmeticBtn" data-cost="200" data-type="btn" data-value="#ffcc00" disabled>Yellow Buttons (200 pts)</button>
+        <button class="cosmeticBtn" data-cost="300" data-type="btn" data-value="#ff66ff" disabled>Purple Buttons (300 pts)</button>
+        <button class="cosmeticBtn" data-cost="400" data-type="font" data-value="Comic Sans MS, cursive" disabled>Comic Font (400 pts)</button>
+        <button class="cosmeticBtn" data-cost="600" data-type="font" data-value="Georgia, serif" disabled>Georgia Font (600 pts)</button>
+      </div>
+    </div>
+
   </div>
 
   <script src="game.js"></script>
 </body>
 </html>
-<h2>Cosmetics (Unlockable)</h2>
-<div id="cosmetics">
-  <button class="cosmeticBtn" data-cost="500" data-type="bg" data-value="#ff9999" disabled>Buy Pink Background (500 pts)</button>
-  <button class="cosmeticBtn" data-cost="1000" data-type="bg" data-value="#99ff99" disabled>Buy Green Background (1000 pts)</button>
-  <button class="cosmeticBtn" data-cost="200" data-type="btn" data-value="#ffcc00" disabled>Buy Yellow Buttons (200 pts)</button>
-  <button class="cosmeticBtn" data-cost="300" data-type="btn" data-value="#ff66ff" disabled>Buy Purple Buttons (300 pts)</button>
-  <button class="cosmeticBtn" data-cost="400" data-type="font" data-value="Comic Sans MS, cursive" disabled>Unlock Comic Font (400 pts)</button>
-  <button class="cosmeticBtn" data-cost="600" data-type="font" data-value="Georgia, serif" disabled>Unlock Georgia Font (600 pts)</button>
-</div>
