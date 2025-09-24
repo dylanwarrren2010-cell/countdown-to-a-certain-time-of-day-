@@ -30,6 +30,40 @@ window.addEventListener("DOMContentLoaded", () => {
     score += power * multiplier * rebirthMultiplier;
     updateUI();
   });
+  const cosmeticBtns = document.querySelectorAll(".cosmeticBtn");
+
+function updateCosmetics() {
+  cosmeticBtns.forEach(btn => {
+    const cost = Number(btn.dataset.cost);
+    btn.disabled = score < cost;
+  });
+}
+
+// Handle cosmetic purchase
+cosmeticBtns.forEach(btn => {
+  btn.addEventListener("click", () => {
+    const cost = Number(btn.dataset.cost);
+    const type = btn.dataset.type;
+    const value = btn.dataset.value;
+
+    if (score >= cost) {
+      score -= cost;
+      
+      if (type === "bg") document.body.style.backgroundColor = value;
+      if (type === "btn") document.querySelectorAll("button").forEach(b => b.style.backgroundColor = value);
+      if (type === "font") document.body.style.fontFamily = value;
+
+      btn.disabled = true; // Can only buy once
+      updateUI();
+    } else {
+      alert("Not enough points!");
+    }
+  });
+});
+
+// Update cosmetic availability each second
+setInterval(updateCosmetics, 1000);
+
 
   // Upgrade 1: Power per click
   upgradeBtn1.addEventListener("click", () => {
