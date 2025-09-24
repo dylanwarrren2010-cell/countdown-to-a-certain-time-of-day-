@@ -60,17 +60,12 @@
   <script src="game.js"></script>
 </body>
 </html>
-<h2>Cosmetics</h2>
-<label for="bgColor">Background Color:</label>
-<input type="color" id="bgColor" value="#222222">
-
-<label for="btnColor">Button Color:</label>
-<input type="color" id="btnColor" value="#61dafb">
-
-<label for="fontSelect">Font:</label>
-<select id="fontSelect">
-  <option value="Arial, sans-serif">Arial</option>
-  <option value="Courier New, monospace">Courier</option>
-  <option value="Comic Sans MS, cursive">Comic Sans</option>
-  <option value="Georgia, serif">Georgia</option>
-</select>
+<h2>Cosmetics (Unlockable)</h2>
+<div id="cosmetics">
+  <button class="cosmeticBtn" data-cost="500" data-type="bg" data-value="#ff9999" disabled>Buy Pink Background (500 pts)</button>
+  <button class="cosmeticBtn" data-cost="1000" data-type="bg" data-value="#99ff99" disabled>Buy Green Background (1000 pts)</button>
+  <button class="cosmeticBtn" data-cost="200" data-type="btn" data-value="#ffcc00" disabled>Buy Yellow Buttons (200 pts)</button>
+  <button class="cosmeticBtn" data-cost="300" data-type="btn" data-value="#ff66ff" disabled>Buy Purple Buttons (300 pts)</button>
+  <button class="cosmeticBtn" data-cost="400" data-type="font" data-value="Comic Sans MS, cursive" disabled>Unlock Comic Font (400 pts)</button>
+  <button class="cosmeticBtn" data-cost="600" data-type="font" data-value="Georgia, serif" disabled>Unlock Georgia Font (600 pts)</button>
+</div>
