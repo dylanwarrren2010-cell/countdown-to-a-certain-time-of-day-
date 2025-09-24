@@ -107,3 +107,24 @@ window.addEventListener("DOMContentLoaded", () => {
     rebirthsEl.textContent = rebirths;
   }
 });
+// Cosmetic elements
+const bgColorInput = document.getElementById("bgColor");
+const btnColorInput = document.getElementById("btnColor");
+const fontSelect = document.getElementById("fontSelect");
+
+// Change background color
+bgColorInput.addEventListener("input", () => {
+  document.body.style.backgroundColor = bgColorInput.value;
+});
+
+// Change button colors
+btnColorInput.addEventListener("input", () => {
+  document.querySelectorAll("button").forEach(btn => {
+    btn.style.backgroundColor = btnColorInput.value;
+  });
+});
+
+// Change font
+fontSelect.addEventListener("change", () => {
+  document.body.style.fontFamily = fontSelect.value;
+});
