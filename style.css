@@ -2,25 +2,38 @@ body {
   font-family: Arial, sans-serif;
   background: #222;
   color: #fff;
+  margin: 0;
+  padding: 0;
   display: flex;
   justify-content: center;
-  align-items: center;
-  height: 100vh;
-  margin: 0;
 }
 
 .container {
-  text-align: center;
+  max-width: 600px;
+  width: 90%;
+  margin: 20px;
   background: #333;
-  padding: 20px;
   border-radius: 12px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  padding: 20px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.5);
+}
+
+h1, h2 {
+  text-align: center;
+  margin: 10px 0;
+}
+
+.score-section {
+  text-align: center;
+  margin-bottom: 20px;
 }
 
 button {
-  padding: 10px 20px;
-  font-size: 1.2rem;
-  margin: 10px;
+  display: block;
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0;
+  font-size: 1.1rem;
   cursor: pointer;
   border: none;
   border-radius: 8px;
@@ -30,5 +43,26 @@ button {
 }
 
 button:hover {
-  transform: scale(1.1);
+  transform: scale(1.05);
+}
+
+.section {
+  margin-top: 20px;
+  padding: 10px;
+  border-top: 1px solid #555;
+}
+
+.shop {
+  display: flex;
+  flex-direction: column;
+}
+
+.shop button {
+  font-size: 1rem;
+}
+
+#countdown {
+  margin-top: 10px;
+  font-size: 1.8rem;
+  text-align: center;
 }
