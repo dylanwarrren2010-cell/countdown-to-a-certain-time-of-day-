@@ -1,60 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Clicker Game + Countdown</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Ultimate Clicker + Countdown</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
+    <header>
+      <h1 id="title">Ultimate Clicker + Countdown</h1>
+      <div id="hiddenCat" class="hidden-cat" title="You found the cat!">🐱</div>
+    </header>
 
     <!-- Countdown -->
-    <div class="section">
-      <h1>Countdown Timer</h1>
-      <label for="timePicker">Pick a time:</label>
-      <input type="time" id="timePicker">
-      <div id="countdown">Choose a time ⏰</div>
-    </div>
+    <section class="card">
+      <h2>Countdown Timer</h2>
+      <div class="row">
+        <input type="time" id="timePicker" />
+        <div id="countdown" class="big">Choose a time ⏰</div>
+      </div>
+    </section>
 
-    <!-- Clicker Game -->
-    <div class="section">
-      <h1>Clicker Game</h1>
-      <div class="score-section">
-        <p>Score: <span id="score">0</span></p>
-        <button id="clickBtn">Click Me!</button>
+    <!-- Game -->
+    <section class="card">
+      <h2>Clicker Game</h2>
+      <div class="score-row">
+        <div>Score: <span id="score">0</span></div>
+        <div>Rebirth Points: <span id="rebirthPoints">0</span></div>
       </div>
 
-      <h2>Upgrades</h2>
-      <div class="upgrades">
-        <button id="upgradeBtn1">Buy Power Upgrade (Cost: 50)</button>
-        <p>Power: <span id="power">1</span> points per click</p>
-
-        <button id="upgradeBtn2">Buy Auto-Clicker (Cost: 200)</button>
-        <p>Auto-Clickers: <span id="autoClickers">0</span></p>
-
-        <button id="upgradeBtn3">Buy Super Upgrade (Cost: 1000)</button>
-        <p>Multiplier: <span id="multiplier">1</span>x</p>
+      <div class="center">
+        <button id="clickBtn" class="bigbtn">Click Me!</button>
       </div>
 
-      <h2>Rebirth</h2>
-      <button id="rebirthBtn">Rebirth (Reset for +1 Rebirth Power)</button>
-      <p>Rebirths: <span id="rebirths">0</span></p>
-    </div>
+      <div class="stats row">
+        <div>Power: <span id="power">1</span></div>
+        <div>Auto: <span id="autoClickers">0</span></div>
+        <div>Mult: <span id="multiplier">1</span>x</div>
+        <div>Rebirths: <span id="rebirths">0</span></div>
+      </div>
 
-    <!-- Cosmetic Shop -->
-    <div class="section">
+      <h3>Upgrades</h3>
+      <div class="shop-grid" id="upgrades">
+        <!-- Buttons created in HTML for clarity -->
+        <button id="buyPower">Power +1 (Cost: <span id="costPower">50</span>)</button>
+        <button id="buyAuto">Auto-Clicker +1 (Cost: <span id="costAuto">200</span>)</button>
+        <button id="buyMulti">Multiplier +1 (Cost: <span id="costMulti">1000</span>)</button>
+        <button id="buyMega">Mega Power +5 (Cost: <span id="costMega">5000</span>)</button>
+        <button id="buyClickBoost">Click Boost +2 (Cost: <span id="costBoost">1200</span>)</button>
+      </div>
+
+      <h3>Rebirth</h3>
+      <div class="row">
+        <button id="rebirthBtn">Rebirth (Cost: <span id="rebirthCost">10000</span>)</button>
+        <div class="small">Each rebirth awards 1 rebirth point. Rebirth cost increases each time.</div>
+      </div>
+    </section>
+
+    <!-- Cosmetics -->
+    <section class="card">
       <h2>Cosmetic Shop</h2>
-      <div id="cosmetics" class="shop">
-        <button class="cosmeticBtn" data-cost="500" data-type="bg" data-value="#ff9999" disabled>Pink Background (500 pts)</button>
-        <button class="cosmeticBtn" data-cost="1000" data-type="bg" data-value="#99ff99" disabled>Green Background (1000 pts)</button>
-        <button class="cosmeticBtn" data-cost="200" data-type="btn" data-value="#ffcc00" disabled>Yellow Buttons (200 pts)</button>
-        <button class="cosmeticBtn" data-cost="300" data-type="btn" data-value="#ff66ff" disabled>Purple Buttons (300 pts)</button>
-        <button class="cosmeticBtn" data-cost="400" data-type="font" data-value="Comic Sans MS, cursive" disabled>Comic Font (400 pts)</button>
-        <button class="cosmeticBtn" data-cost="600" data-type="font" data-value="Georgia, serif" disabled>Georgia Font (600 pts)</button>
-      </div>
-    </div>
+      <div class="shop-grid" id="cosmeticGrid">
+        <!-- Score-purchased cosmetics -->
+        <button class="cosmetic" data-cost="200" data-type="bg" data-value="#282c34">Dark Theme (200)</button>
+        <button class="cosmetic" data-cost="300" data-type="bg" data-value="#0b3d91">Blue Theme (300)</button>
+        <button class="cosmetic" data-cost="250" data-type="btn" data-value="#ffcc00">Yellow Buttons (250)</button>
+        <button class="cosmetic" data-cost="350" data-type="btn" data-value="#ff66ff">Pink Buttons (350)</button>
+        <button class="cosmetic" data-cost="400" data-type="font" data-value="Georgia, serif">Georgia Font (400)</button>
 
+        <!-- Rebirth-point cosmetics (special rainbow stuff) -->
+        <button class="cosmetic rebirth-only" data-rpcost="1" data-type="rainbow" data-value="rainbow" title="Costs rebirth points">Rainbow Glow (1 RP)</button>
+        <button class="cosmetic rebirth-only" data-rpcost="2" data-type="rainbow" data-value="rwbkg" title="Costs rebirth points">Rainbow Background (2 RP)</button>
+      </div>
+      <div class="small">Some cosmetics require Rebirth Points (RP). RP is gained by rebirthing.</div>
+    </section>
+
+    <!-- Cheats / Leaderboard -->
+    <section class="card">
+      <h2>Cheats & Leaderboard</h2>
+      <div class="row">
+        <input id="cheatInput" placeholder="Enter cheat code (hint: secret!)" />
+        <button id="applyCheat">Apply</button>
+      </div>
+
+      <h3>Leaderboard</h3>
+      <div class="row">
+        <input id="playerName" placeholder="Your name" />
+        <button id="saveScore">Save Score</button>
+      </div>
+      <ol id="leaderboard"></ol>
+      <div class="row">
+        <button id="resetSave">Reset Save</button>
+        <button id="clearLeaderboard">Clear Leaderboard</button>
+      </div>
+    </section>
+
+    <footer class="card small">
+      Built with ❤️ — find the hidden cat by clicking the title 7 times or typing "meow".
+    </footer>
   </div>
 
   <script src="game.js"></script>
