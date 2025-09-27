@@ -1,564 +1,198 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Ultimate Clicker + Countdown (All-in-one)</title>
-<style>
-  :root{
-    --bg:#222;
-    --panel:#333;
-    --accent:#61dafb;
-    --btn-text:#000;
-  }
-  *{box-sizing:border-box}
-  body{
-    margin:0;
-    font-family:Arial, Helvetica, sans-serif;
-    background:var(--bg);
-    color:#fff;
-    display:flex;
-    justify-content:center;
-    padding:20px;
-  }
-  .container{width:100%;max-width:980px}
-  header{display:flex;align-items:center;justify-content:center;position:relative}
-  #title{cursor:pointer;text-align:center;margin:0 0 12px 0}
-  .hidden-cat{position:absolute;right:10px;top:0;font-size:28px;opacity:0;transform:scale(0.8);transition:all .3s}
-  .hidden-cat.show{opacity:1;transform:scale(1)}
-  .card{background:var(--panel);border-radius:10px;padding:12px;margin:10px 0;box-shadow:0 6px 18px rgba(0,0,0,0.4)}
-  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-  .center{text-align:center}
-  .big{font-size:1.6rem}
-  .bigbtn{
-    padding:18px 28px;font-size:1.6rem;border-radius:12px;background:var(--accent);color:var(--btn-text);
-    border:none;cursor:pointer;box-shadow:0 6px rgba(0,0,0,0.2);
-  }
-  .bigbtn:active{transform:translateY(2px)}
-  .score-row{display:flex;justify-content:space-between;margin-bottom:12px}
-  .stats{display:flex;gap:18px;justify-content:space-between;flex-wrap:wrap;margin-top:6px}
-  .shop-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:8px}
-  button{background:var(--accent);color:var(--btn-text);border:none;padding:10px;border-radius:8px;cursor:pointer}
-  button:disabled{opacity:.5;cursor:not-allowed}
-  .small{font-size:.85rem;opacity:.85;margin-top:6px}
-  input[type=time], input, select{padding:8px;border-radius:6px;border:none}
-  ol#leaderboard{padding-left:20px;margin:8px 0}
-  .bought{opacity:0.7;position:relative}
-  .bought::after{content:" ✅";position:static}
-  /* rainbow glow cosmetic */
-  .rainbow-glow{animation: rainbowGlow 3s linear infinite; box-shadow:0 0 18px rgba(255,255,255,0.12);}
-  @keyframes rainbowGlow{0%{filter:hue-rotate(0deg)}100%{filter:hue-rotate(360deg)}}
-  .rainbow-bg{
-    background:linear-gradient(90deg,#ff6b6b,#ffd93d,#6bf178,#4dd0e1,#8b6bdb);
-    background-size:400% 400%;animation: rainbowBg 8s ease infinite;color:#000;
-  }
-  @keyframes rainbowBg{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
-  .muted{opacity:.6}
-</style>
+  <meta charset="UTF-8">
+  <title>Clicker + Clock Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      background: #222;
+      color: white;
+    }
+    h1 {
+      cursor: pointer;
+      margin: 20px 0;
+    }
+    #clock {
+      font-size: 20px;
+      margin: 10px 0;
+    }
+    #click-btn {
+      padding: 20px 40px;
+      font-size: 24px;
+      margin: 20px;
+      cursor: pointer;
+    }
+    #stats {
+      margin: 20px;
+    }
+    #shop, #cosmetics {
+      border: 2px solid white;
+      margin: 20px auto;
+      padding: 15px;
+      width: 80%;
+      max-width: 500px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.1);
+    }
+    .shop-item, .cosmetic-item {
+      margin: 8px 0;
+      cursor: pointer;
+    }
+    #hidden-cat {
+      display: none;
+      font-size: 32px;
+      margin-top: 20px;
+    }
+    .rainbow-bg {
+      animation: rainbow 4s linear infinite;
+    }
+    @keyframes rainbow {
+      0% { background: red; }
+      16% { background: orange; }
+      33% { background: yellow; }
+      50% { background: green; }
+      66% { background: blue; }
+      83% { background: indigo; }
+      100% { background: violet; }
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1 id="title">Ultimate Clicker + Countdown</h1>
-      <div id="hiddenCat" class="hidden-cat" title="You found the cat!">🐱</div>
-    </header>
+  <h1 id="title">Ultimate Clicker Game</h1>
+  <div id="clock"></div>
+  <button id="click-btn">Click Me!</button>
 
-    <!-- Countdown -->
-    <section class="card">
-      <h2>Countdown Timer</h2>
-      <div class="row">
-        <input type="time" id="timePicker" />
-        <div id="countdown" class="big">Choose a time ⏰</div>
-      </div>
-    </section>
-
-    <!-- Game -->
-    <section class="card">
-      <h2>Clicker Game</h2>
-      <div class="score-row">
-        <div>Score: <strong><span id="score">0</span></strong></div>
-        <div>Rebirth Points: <strong><span id="rebirthPoints">0</span></strong></div>
-      </div>
-
-      <div class="center">
-        <button id="clickBtn" class="bigbtn">Click Me!</button>
-      </div>
-
-      <div class="stats row muted">
-        <div>Power: <span id="power">1</span></div>
-        <div>Auto: <span id="autoClickers">0</span></div>
-        <div>Mult: <span id="multiplier">1</span>x</div>
-        <div>Rebirths: <span id="rebirths">0</span></div>
-      </div>
-
-      <h3>Upgrades</h3>
-      <div class="shop-grid" id="upgrades">
-        <button id="buyPower">Power +1 (Cost: <span id="costPower">50</span>)</button>
-        <button id="buyAuto">Auto-Clicker +1 (Cost: <span id="costAuto">200</span>)</button>
-        <button id="buyMulti">Multiplier +1 (Cost: <span id="costMulti">1000</span>)</button>
-        <button id="buyMega">Mega Power +5 (Cost: <span id="costMega">5000</span>)</button>
-        <button id="buyClickBoost">Click Boost +2 (Cost: <span id="costBoost">1200</span>)</button>
-      </div>
-
-      <h3>Rebirth</h3>
-      <div class="row">
-        <button id="rebirthBtn">Rebirth (Cost: <span id="rebirthCost">10000</span>)</button>
-        <div class="small">Each rebirth awards 1 Rebirth Point (RP). Cost doubles each rebirth.</div>
-      </div>
-    </section>
-
-    <!-- Cosmetic Shop -->
-    <section class="card">
-      <h2>Cosmetic Shop</h2>
-      <div class="shop-grid" id="cosmeticGrid">
-        <!-- each cosmetics has a data-id to persist purchase -->
-        <button class="cosmetic" data-id="bg_dark" data-cost="200" data-type="bg" data-value="#282c34">Dark Theme (200)</button>
-        <button class="cosmetic" data-id="bg_blue" data-cost="300" data-type="bg" data-value="#0b3d91">Blue Theme (300)</button>
-        <button class="cosmetic" data-id="btn_yellow" data-cost="250" data-type="btn" data-value="#ffcc00">Yellow Buttons (250)</button>
-        <button class="cosmetic" data-id="btn_pink" data-cost="350" data-type="btn" data-value="#ff66ff">Pink Buttons (350)</button>
-        <button class="cosmetic" data-id="font_georgia" data-cost="400" data-type="font" data-value="Georgia, serif">Georgia Font (400)</button>
-
-        <!-- rebirth-point cosmetics -->
-        <button class="cosmetic rebirth-only" data-id="r_rainbowglow" data-rpcost="1" data-type="rainbow" data-value="rainbow">Rainbow Glow (1 RP)</button>
-        <button class="cosmetic rebirth-only" data-id="r_rbkg" data-rpcost="2" data-type="rainbow" data-value="rwbkg">Rainbow Background (2 RP)</button>
-      </div>
-      <div class="small">Some cosmetics must be purchased with Rebirth Points (RP).</div>
-    </section>
-
-    <!-- Cheats & Leaderboard -->
-    <section class="card">
-      <h2>Cheats & Leaderboard</h2>
-      <div class="row">
-        <input id="cheatInput" placeholder="Enter cheat code" />
-        <button id="applyCheat">Apply</button>
-      </div>
-
-      <h3>Leaderboard</h3>
-      <div class="row">
-        <input id="playerName" placeholder="Your name" />
-        <button id="saveScore">Save Score</button>
-      </div>
-      <ol id="leaderboard"></ol>
-      <div class="row" style="margin-top:8px">
-        <button id="resetSave">Reset Save</button>
-        <button id="clearLeaderboard">Clear Leaderboard</button>
-      </div>
-    </section>
-
-    <footer class="card small">Built with ❤️ — find the hidden cat by clicking the title 7 times or typing "meow" or using cheat "RAINBOWCAT".</footer>
+  <div id="stats">
+    <p>Coins: <span id="coins">0</span></p>
+    <p>Coins Per Click: <span id="cpc">1</span></p>
+    <p>Rebirths: <span id="rebirths">0</span></p>
   </div>
 
-<script>
-/* Single-file full game logic — replace existing index.html with this to avoid missing files */
-window.addEventListener('DOMContentLoaded', () => {
+  <div id="shop">
+    <h2>Upgrades</h2>
+    <div class="shop-item" onclick="buyUpgrade(10)">+1 CPC (Cost: 10)</div>
+    <div class="shop-item" onclick="buyUpgrade(100)">+5 CPC (Cost: 100)</div>
+    <div class="shop-item" onclick="buyUpgrade(1000)">+20 CPC (Cost: 1,000)</div>
+    <div class="shop-item" onclick="rebirth()">Rebirth (Cost: <span id="rebirth-cost">5000</span>)</div>
+  </div>
 
-  // ---- elements ----
-  const el = id => document.getElementById(id);
-  const timePicker = el('timePicker');
-  const countdownEl = el('countdown');
-  const scoreEl = el('score');
-  const rebirthPointsEl = el('rebirthPoints');
-  const powerEl = el('power');
-  const autoClickersEl = el('autoClickers');
-  const multiplierEl = el('multiplier');
-  const rebirthsEl = el('rebirths');
-  const clickBtn = el('clickBtn');
+  <div id="cosmetics">
+    <h2>Cosmetics (Rebirth Points)</h2>
+    <div class="cosmetic-item" onclick="buyCosmetic('red')">Red Theme (Cost: 1 RP)</div>
+    <div class="cosmetic-item" onclick="buyCosmetic('blue')">Blue Theme (Cost: 1 RP)</div>
+    <div class="cosmetic-item" onclick="buyCosmetic('green')">Green Theme (Cost: 1 RP)</div>
+    <div class="cosmetic-item" onclick="buyCosmetic('rainbow')">Rainbow Theme (Cost: 3 RP)</div>
+  </div>
 
-  const buyPower = el('buyPower');
-  const buyAuto = el('buyAuto');
-  const buyMulti = el('buyMulti');
-  const buyMega = el('buyMega');
-  const buyBoost = el('buyClickBoost');
+  <div id="hidden-cat">🐱 You found the cat!</div>
 
-  const costPower = el('costPower');
-  const costAuto = el('costAuto');
-  const costMulti = el('costMulti');
-  const costMega = el('costMega');
-  const costBoost = el('costBoost');
+  <script>
+    const coinsEl = document.getElementById("coins");
+    const cpcEl = document.getElementById("cpc");
+    const rebirthsEl = document.getElementById("rebirths");
+    const rebirthCostEl = document.getElementById("rebirth-cost");
+    const hiddenCat = document.getElementById("hidden-cat");
 
-  const rebirthBtn = el('rebirthBtn');
-  const rebirthCostEl = el('rebirthCost');
+    let state = {
+      score: 0,
+      cpc: 1,
+      rebirths: 0,
+      rebirthCost: 5000,
+      rebirthPoints: 0
+    };
 
-  const cosmeticBtns = Array.from(document.querySelectorAll('.cosmetic'));
-  const rebirthOnlyBtns = Array.from(document.querySelectorAll('.rebirth-only'));
-
-  const cheatInput = el('cheatInput');
-  const applyCheat = el('applyCheat');
-  const playerName = el('playerName');
-  const saveScore = el('saveScore');
-  const leaderboardEl = el('leaderboard');
-  const resetSave = el('resetSave');
-  const clearLeaderboard = el('clearLeaderboard');
-
-  const title = el('title');
-  const hiddenCat = el('hiddenCat');
-
-  // ---- defaults and state ----
-  const defaultState = {
-    score: 0,
-    power: 1,
-    autoClickers: 0,
-    multiplier: 1,
-    rebirths: 0,
-    rebirthPoints: 0,
-    // costs
-    costPower: 50,
-    costAuto: 200,
-    costMulti: 1000,
-    costMega: 5000,
-    costBoost: 1200,
-    purchasedCosmetics: [],         // store data-id strings of bought cosmetics
-    purchasedRebirthCosmetics: [],  // store data-id strings of RP-bought cosmetics
-    // target time not persisted intentionally
-  };
-
-  function loadState(){
-    try {
-      const raw = localStorage.getItem('ultimate_clicker_state_v2');
-      if(!raw) return {...defaultState};
-      const parsed = JSON.parse(raw);
-      const merged = {...defaultState, ...parsed};
-      // coerce numbers (in case storage saved strings)
-      for(const k of Object.keys(defaultState)){
-        if(typeof defaultState[k] === 'number'){
-          merged[k] = Number(merged[k]) || defaultState[k];
-        }
-      }
-      // ensure arrays exist
-      merged.purchasedCosmetics = Array.isArray(merged.purchasedCosmetics) ? merged.purchasedCosmetics : [];
-      merged.purchasedRebirthCosmetics = Array.isArray(merged.purchasedRebirthCosmetics) ? merged.purchasedRebirthCosmetics : [];
-      return merged;
-    } catch(e){
-      console.warn('Failed to load state, using defaults', e);
-      return {...defaultState};
-    }
-  }
-  let state = loadState();
-
-  function saveState(){
-    localStorage.setItem('ultimate_clicker_state_v2', JSON.stringify(state));
-  }
-
-  // ---- countdown logic ----
-  let targetTime = null;
-  timePicker.addEventListener('input', function(){
-    if(this.value){
-      const [h,m] = this.value.split(':').map(Number);
-      targetTime = {hours: h, minutes: m};
-    }
-  });
-  function updateCountdown(){
-    if(!targetTime){ countdownEl.textContent = 'Choose a time ⏰'; return; }
-    const now = new Date();
-    const target = new Date();
-    target.setHours(targetTime.hours, targetTime.minutes, 0, 0);
-    if(now > target) target.setDate(target.getDate()+1);
-    const diff = Math.max(0, target - now);
-    const hours = Math.floor(diff / 3600000);
-    const minutes = Math.floor((diff % 3600000) / 60000);
-    const seconds = Math.floor((diff % 60000) / 1000);
-    countdownEl.textContent = `${hours}h ${minutes}m ${seconds}s`;
-  }
-  setInterval(updateCountdown, 1000);
-  updateCountdown();
-
-  // ---- UI updates ----
-  function calculateRebirthCost(){
-    return Math.floor(10000 * Math.pow(2, state.rebirths)); // doubles each rebirth
-  }
-
-  function format(n){ return Math.floor(n).toLocaleString(); }
-
-  function updateUI(){
-    scoreEl.textContent = format(state.score);
-    rebirthPointsEl.textContent = state.rebirthPoints;
-    powerEl.textContent = state.power;
-    autoClickersEl.textContent = state.autoClickers;
-    multiplierEl.textContent = state.multiplier;
-    rebirthsEl.textContent = state.rebirths;
-
-    costPower.textContent = format(state.costPower);
-    costAuto.textContent = format(state.costAuto);
-    costMulti.textContent = format(state.costMulti);
-    costMega.textContent = format(state.costMega);
-    costBoost.textContent = format(state.costBoost);
-    rebirthCostEl.textContent = format(calculateRebirthCost());
-
-    // enable/disable upgrade buttons
-    buyPower.disabled = state.score < state.costPower;
-    buyAuto.disabled = state.score < state.costAuto;
-    buyMulti.disabled = state.score < state.costMulti;
-    buyMega.disabled = state.score < state.costMega;
-    buyBoost.disabled = state.score < state.costBoost;
-
-    // cosmetics (score-purchased)
-    cosmeticBtns.forEach(btn=>{
-      const id = btn.dataset.id;
-      const cost = Number(btn.dataset.cost || 0);
-      const owned = state.purchasedCosmetics.includes(id);
-      btn.disabled = owned || state.score < cost;
-      btn.classList.toggle('bought', owned);
-      if(owned) btn.textContent = btn.textContent.split(' (')[0] + ' (Bought ✅)';
+    document.getElementById("click-btn").addEventListener("click", ()=>{
+      state.score += state.cpc;
+      update();
     });
 
-    // rebirth-only cosmetics
-    rebirthOnlyBtns.forEach(btn=>{
-      const id = btn.dataset.id;
-      const rpcost = Number(btn.dataset.rpcost || 0);
-      const owned = state.purchasedRebirthCosmetics.includes(id);
-      btn.disabled = owned || state.rebirthPoints < rpcost;
-      btn.classList.toggle('bought', owned);
-      if(owned) btn.textContent = btn.textContent.split(' (')[0] + ' (Bought ✅)';
-    });
-
-    saveState();
-  }
-
-  // apply persisted cosmetics on load
-  function applyPersistedCosmetics(){
-    (state.purchasedCosmetics || []).forEach(id => {
-      const btn = cosmeticBtns.find(b => b.dataset.id === id);
-      if(btn) applyCosmetic(btn.dataset.type, btn.dataset.value, id);
-    });
-    (state.purchasedRebirthCosmetics || []).forEach(id => {
-      const btn = rebirthOnlyBtns.find(b => b.dataset.id === id);
-      if(btn) applyCosmetic(btn.dataset.type, btn.dataset.value, id);
-    });
-  }
-
-  // ---- core gameplay ----
-  function getRebirthBonus(){
-    // simple: +1 multiplier per rebirth (1 -> 2 after one rebirth)
-    return 1 + state.rebirths;
-  }
-
-  clickBtn.addEventListener('click', ()=>{
-    state.score += state.power * state.multiplier * getRebirthBonus();
-    flash(clickBtn);
-    updateUI();
-  });
-
-  // autos
-  setInterval(()=> {
-    if(state.autoClickers > 0){
-      state.score += state.autoClickers * state.multiplier * getRebirthBonus();
-      updateUI();
-    }
-  }, 1000);
-
-  // ---- upgrades handlers ----
-  buyPower.addEventListener('click', ()=>{
-    if(state.score >= state.costPower){
-      state.score -= state.costPower;
-      state.power += 1;
-      state.costPower = Math.floor(state.costPower * 1.6);
-      updateUI();
-    }
-  });
-  buyAuto.addEventListener('click', ()=>{
-    if(state.score >= state.costAuto){
-      state.score -= state.costAuto;
-      state.autoClickers += 1;
-      state.costAuto = Math.floor(state.costAuto * 1.7);
-      updateUI();
-    }
-  });
-  buyMulti.addEventListener('click', ()=>{
-    if(state.score >= state.costMulti){
-      state.score -= state.costMulti;
-      state.multiplier += 1;
-      state.costMulti = Math.floor(state.costMulti * 2);
-      updateUI();
-    }
-  });
-  buyMega.addEventListener('click', ()=>{
-    if(state.score >= state.costMega){
-      state.score -= state.costMega;
-      state.power += 5;
-      state.costMega = Math.floor(state.costMega * 2.2);
-      updateUI();
-    }
-  });
-  buyBoost.addEventListener('click', ()=>{
-    if(state.score >= state.costBoost){
-      state.score -= state.costBoost;
-      state.power += 2;
-      state.costBoost = Math.floor(state.costBoost * 1.9);
-      updateUI();
-    }
-  });
-
-  // ---- rebirth ----
-  rebirthBtn.addEventListener('click', ()=>{
-    const cost = calculateRebirthCost();
-    if(state.score >= cost){
-      state.score = 0;
-      state.power = 1;
-      state.autoClickers = 0;
-      state.multiplier = 1;
-      state.rebirths += 1;
-      state.rebirthPoints += 1;
-      // reset costs
-      state.costPower = defaultState.costPower;
-      state.costAuto = defaultState.costAuto;
-      state.costMulti = defaultState.costMulti;
-      state.costMega = defaultState.costMega;
-      state.costBoost = defaultState.costBoost;
-      // update and save
-      updateUI();
-      alert('Rebirth complete! You gained 1 Rebirth Point (RP).');
-    } else {
-      alert('Not enough points to rebirth.');
-    }
-  });
-
-  // ---- cosmetics ----
-  function applyCosmetic(type, value, id){
-    if(type === 'bg'){
-      document.documentElement.style.setProperty('--bg', value);
-    } else if(type === 'btn'){
-      document.documentElement.style.setProperty('--accent', value);
-    } else if(type === 'font'){
-      document.body.style.fontFamily = value;
-    } else if(type === 'rainbow'){
-      if(value === 'rainbow'){
-        clickBtn.classList.add('rainbow-glow');
-      } else if(value === 'rwbkg'){
-        document.querySelector('.container').classList.add('rainbow-bg');
-      }
-    }
-    // mark button text (done in updateUI)
-  }
-
-  // buy cosmetics with score
-  cosmeticBtns.forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      const id = btn.dataset.id;
-      const cost = Number(btn.dataset.cost || 0);
-      if(state.purchasedCosmetics.includes(id)) return;
+    function buyUpgrade(cost){
       if(state.score >= cost){
         state.score -= cost;
-        state.purchasedCosmetics.push(id);
-        applyCosmetic(btn.dataset.type, btn.dataset.value, id);
-        updateUI();
+        if(cost === 10) state.cpc += 1;
+        if(cost === 100) state.cpc += 5;
+        if(cost === 1000) state.cpc += 20;
+        update();
       }
-    });
-  });
-
-  // buy cosmetics with rebirth points
-  rebirthOnlyBtns.forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      const id = btn.dataset.id;
-      const rpcost = Number(btn.dataset.rpcost || 0);
-      if(state.purchasedRebirthCosmetics.includes(id)) return;
-      if(state.rebirthPoints >= rpcost){
-        state.rebirthPoints -= rpcost;
-        state.purchasedRebirthCosmetics.push(id);
-        applyCosmetic(btn.dataset.type, btn.dataset.value, id);
-        updateUI();
-      }
-    });
-  });
-
-  // ---- cheats ----
-  applyCheat.addEventListener('click', ()=>{
-    const code = String(cheatInput.value || '').trim().toUpperCase();
-    if(!code) return;
-    if(code === 'GODMODE' || code === 'RAINBOWCAT'){
-      state.score += 10000000;
-      // unlock rainbow cosmetics
-      if(!state.purchasedRebirthCosmetics.includes('r_rainbowglow')){
-        state.purchasedRebirthCosmetics.push('r_rainbowglow');
-        applyCosmetic('rainbow','rainbow','r_rainbowglow');
-      }
-      revealCat();
-      updateUI();
-      alert('Cheat applied: +10,000,000 coins!');
-    } else if(code === 'SMALLCHEAT'){
-      state.score += 10000; updateUI(); alert('Small cheat: +10,000');
-    } else {
-      alert('Wrong code.');
     }
-    cheatInput.value = '';
-  });
 
-  // ---- leaderboard (localStorage) ----
-  function loadLeaderboard(){
-    try {
-      const raw = localStorage.getItem('ultimate_clicker_leaderboard_v2');
-      if(!raw) return [];
-      return JSON.parse(raw);
-    } catch(e){ return []; }
-  }
-  function saveLeaderboard(list){
-    localStorage.setItem('ultimate_clicker_leaderboard_v2', JSON.stringify(list));
-  }
-  function renderLeaderboard(){
-    const list = loadLeaderboard();
-    leaderboardEl.innerHTML = '';
-    list.slice(0,10).forEach(entry=>{
-      const li = document.createElement('li');
-      li.textContent = `${entry.name} — ${Math.floor(entry.score).toLocaleString()}`;
-      leaderboardEl.appendChild(li);
-    });
-  }
-  saveScore.addEventListener('click', ()=>{
-    const name = (playerName.value || 'Anonymous').slice(0,20);
-    const list = loadLeaderboard();
-    list.push({name, score: Math.floor(state.score)});
-    list.sort((a,b)=>b.score-a.score);
-    saveLeaderboard(list.slice(0,50));
-    renderLeaderboard();
-    alert('Score saved to leaderboard!');
-  });
-  clearLeaderboard.addEventListener('click', ()=>{
-    if(confirm('Clear leaderboard?')){ saveLeaderboard([]); renderLeaderboard(); }
-  });
-
-  // ---- save / reset ----
-  resetSave.addEventListener('click', ()=>{
-    if(confirm('Reset your save (this clears game progress but not leaderboard)?')){
-      localStorage.removeItem('ultimate_clicker_state_v2');
-      state = {...defaultState};
-      updateUI();
-      applyPersistedCosmetics();
-      alert('Save reset.');
+    function rebirth(){
+      if(state.score >= state.rebirthCost){
+        state.score = 0;
+        state.cpc = 1;
+        state.rebirths++;
+        state.rebirthPoints++;
+        state.rebirthCost = Math.floor(state.rebirthCost * 2);
+        update();
+      }
     }
-  });
 
-  // ---- hidden cat easter egg ----
-  let titleClicks = 0;
-  title.addEventListener('click', ()=>{
-    titleClicks++;
-    if(titleClicks >= 7) revealCat();
-    setTimeout(()=>{ titleClicks = Math.max(0, titleClicks-1); }, 1600);
-  });
-  let keyBuffer = '';
-  window.addEventListener('keydown', (e)=>{
-    keyBuffer += e.key.toLowerCase();
-    if(keyBuffer.endsWith('meow')) revealCat();
-    if(keyBuffer.length > 30) keyBuffer = keyBuffer.slice(-30);
-  });
-  function revealCat(){
-    hiddenCat.classList.add('show');
-    clickBtn.textContent = 'Purr!';
-    setTimeout(()=>{ clickBtn.textContent = 'Click Me!'; }, 2400);
-  }
+    function buyCosmetic(type){
+      if(type === "red" && state.rebirthPoints >= 1){
+        document.body.style.background = "darkred";
+        state.rebirthPoints -= 1;
+      }
+      if(type === "blue" && state.rebirthPoints >= 1){
+        document.body.style.background = "darkblue";
+        state.rebirthPoints -= 1;
+      }
+      if(type === "green" && state.rebirthPoints >= 1){
+        document.body.style.background = "darkgreen";
+        state.rebirthPoints -= 1;
+      }
+      if(type === "rainbow" && state.rebirthPoints >= 3){
+        document.body.classList.add("rainbow-bg");
+        state.rebirthPoints -= 3;
+      }
+      update();
+    }
 
-  function flash(elm){
-    elm.style.transform = 'scale(0.98)';
-    setTimeout(()=>{ elm.style.transform = ''; }, 60);
-  }
+    function update(){
+      coinsEl.textContent = state.score;
+      cpcEl.textContent = state.cpc;
+      rebirthsEl.textContent = state.rebirths;
+      rebirthCostEl.textContent = state.rebirthCost;
+    }
 
-  // ---- initial apply persisted cosmetics and UI ----
-  applyPersistedCosmetics();
-  updateUI();
-  renderLeaderboard();
+    // Clock
+    function updateClock(){
+      const now = new Date();
+      document.getElementById("clock").textContent = now.toLocaleTimeString();
+    }
+    setInterval(updateClock,1000);
 
-  // autosave occasionally
-  setInterval(saveState, 5000);
+    // Hidden Cat (click title 7 times)
+    let titleClicks = 0;
+    document.getElementById("title").addEventListener("click", ()=>{
+      titleClicks++;
+      if(titleClicks >= 7){
+        hiddenCat.style.display = "block";
+      }
+    });
 
-}); // DOMContentLoaded
-</script>
+    // Cheat codes (OG version)
+    document.addEventListener("keydown",(e)=>{
+      if(e.key === "Enter"){ 
+        const code = prompt("Enter cheat code:").toUpperCase();
+        if(code === "GODMODE" || code === "RAINBOWCAT"){
+          state.score += 10000000;
+          document.body.classList.add("rainbow-bg");
+          hiddenCat.style.display = "block";
+          alert("GODMODE Activated!");
+        }
+        if(code === "SMALLCHEAT"){
+          state.score += 10000;
+          alert("Cheat Activated: +10,000 Coins");
+        }
+        update();
+      }
+    });
+
+    update();
+  </script>
 </body>
 </html>
