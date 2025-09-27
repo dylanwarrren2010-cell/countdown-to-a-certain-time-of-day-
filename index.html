@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Clicker Game with Cosmetics</title>
+  <title>Clicker Game with Cheats, Timer & Re-equipable Cosmetics</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -17,19 +17,29 @@
       padding: 20px 40px;
       margin: 20px;
       cursor: pointer;
+      border-radius: 50px;
       transition: all 0.3s ease;
     }
-    #shop button, #cosmetics button {
+    button {
       margin: 5px;
       padding: 10px 20px;
       cursor: pointer;
+      border-radius: 25px;
+      border: none;
     }
     #hiddenCat {
       display: none;
       font-size: 3rem;
       margin-top: 20px;
     }
-    /* Rainbow background animation */
+    #cheatBox {
+      margin: 15px auto;
+      padding: 10px;
+    }
+    #timer {
+      font-size: 1.2rem;
+      margin-bottom: 15px;
+    }
     .rainbow-bg {
       background: linear-gradient(270deg, red, orange, yellow, green, blue, indigo, violet);
       background-size: 1400% 1400%;
@@ -40,7 +50,6 @@
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
-    /* Cosmetics styles */
     .glow-text { color: white; text-shadow: 0 0 10px cyan, 0 0 20px blue; }
     .giant-button { font-size: 3rem !important; padding: 40px 80px !important; }
     .rainbow-text {
@@ -55,6 +64,11 @@
 </head>
 <body>
   <h1 id="title">Clicker Game</h1>
+
+  <!-- Timer -->
+  <div id="timer"></div>
+  <label>Set Target Time: <input type="time" id="targetTime" value="14:13"></label>
+
   <p>Coins: <span id="score">0</span></p>
   <p>Rebirths: <span id="rebirths">0</span> | Points: <span id="rebirthPoints">0</span></p>
 
@@ -76,24 +90,23 @@
 
   <h2>Cosmetics Shop</h2>
   <div id="cosmetics">
-    <!-- Background colors -->
     <button data-type="bg" data-cost="500" data-value="red">Red Background</button>
     <button data-type="bg" data-cost="1000" data-value="blue">Blue Background</button>
     <button data-type="bg" data-cost="2000" data-value="purple">Purple Background</button>
     <button data-type="bg" data-cost="3000" data-value="cyan">Cyan Background</button>
     <button data-type="bg" data-cost="5000" data-value="green">Green Background</button>
     <button data-type="bg" data-cost="20000" data-value="black">Dark Mode</button>
-
-    <!-- Visual effects -->
     <button data-type="effect" data-cost="10000" data-value="glow-text">Glowing Text</button>
     <button data-type="effect" data-cost="15000" data-value="giant-button">Giant Button</button>
     <button data-type="effect" data-cost="25000" data-value="rainbow-text">Rainbow Text</button>
-
-    <!-- Rebirth cosmetics -->
     <button data-type="rainbow" data-rpcost="10">Rainbow Background 🌈</button>
     <button data-type="effect" data-rpcost="20" data-value="gold-text">Golden Text ✨</button>
     <button data-type="effect" data-rpcost="30" data-value="neon-border">Neon Borders 🟢</button>
   </div>
+
+  <h2>Cheat Codes</h2>
+  <input id="cheatBox" type="text" placeholder="Enter cheat code...">
+  <button id="useCheat">Use Cheat</button>
 
   <div id="hiddenCat">🐱 You found the hidden cat!</div>
 
@@ -105,22 +118,19 @@
     const clicker = document.getElementById("clicker");
     const cosmeticBtns = document.querySelectorAll("#cosmetics button");
     const hiddenCat = document.getElementById("hiddenCat");
+    const cheatBox = document.getElementById("cheatBox");
+    const timerEl = document.getElementById("timer");
+    const targetTimeInput = document.getElementById("targetTime");
 
     let state = {
-      score: 0,
-      power: 1,
-      autoClickers: 0,
-      multiplier: 1,
-      rebirths: 0,
-      rebirthPoints: 0,
-      costPower: 10,
-      costAuto: 50,
-      costMulti: 200,
-      costMega: 1000,
-      costBoost: 5000,
-      costSuperPower: 20000,
-      costUltraMulti: 100000,
+      score: 0, power: 1, autoClickers: 0, multiplier: 1,
+      rebirths: 0, rebirthPoints: 0,
+      costPower: 10, costAuto: 50, costMulti: 200, costMega: 1000,
+      costBoost: 5000, costSuperPower: 20000, costUltraMulti: 100000,
     };
+
+    // Track purchased cosmetics
+    let purchasedCosmetics = new Set();
 
     function updateUI(){
       scoreEl.textContent = Math.floor(state.score);
@@ -146,124 +156,91 @@
       updateUI();
     }, 1000);
 
-    document.getElementById("buyPower").addEventListener("click", ()=>{
-      if(state.score >= state.costPower){
-        state.score -= state.costPower;
-        state.power++;
-        state.costPower = Math.floor(state.costPower * 1.5);
-        updateUI();
-      }
-    });
-    document.getElementById("buyAuto").addEventListener("click", ()=>{
-      if(state.score >= state.costAuto){
-        state.score -= state.costAuto;
-        state.autoClickers++;
-        state.costAuto = Math.floor(state.costAuto * 1.7);
-        updateUI();
-      }
-    });
-    document.getElementById("buyMulti").addEventListener("click", ()=>{
-      if(state.score >= state.costMulti){
-        state.score -= state.costMulti;
-        state.multiplier *= 2;
-        state.costMulti = Math.floor(state.costMulti * 2.5);
-        updateUI();
-      }
-    });
-    document.getElementById("buyMega").addEventListener("click", ()=>{
-      if(state.score >= state.costMega){
-        state.score -= state.costMega;
-        state.multiplier *= 5;
-        state.costMega = Math.floor(state.costMega * 3);
-        updateUI();
-      }
-    });
-    document.getElementById("buyBoost").addEventListener("click", ()=>{
-      if(state.score >= state.costBoost){
-        state.score -= state.costBoost;
-        state.autoClickers += 10;
-        state.costBoost = Math.floor(state.costBoost * 2);
-        updateUI();
-      }
-    });
-    document.getElementById("buySuperPower").addEventListener("click", ()=>{
-      if(state.score >= state.costSuperPower){
-        state.score -= state.costSuperPower;
-        state.power += 50;
-        state.costSuperPower = Math.floor(state.costSuperPower * 2);
-        updateUI();
-      }
-    });
-    document.getElementById("buyUltraMulti").addEventListener("click", ()=>{
-      if(state.score >= state.costUltraMulti){
-        state.score -= state.costUltraMulti;
-        state.multiplier *= 10;
-        state.costUltraMulti = Math.floor(state.costUltraMulti * 2.5);
-        updateUI();
-      }
-    });
+    // Timer
+    setInterval(()=>{
+      const now = new Date();
+      const [h,m] = targetTimeInput.value.split(":").map(Number);
+      let target = new Date();
+      target.setHours(h, m, 0, 0);
+      if(target < now) target.setDate(target.getDate()+1);
+      const diff = target - now;
+      const hrs = Math.floor(diff/3600000);
+      const mins = Math.floor((diff%3600000)/60000);
+      const secs = Math.floor((diff%60000)/1000);
+      timerEl.textContent = `Countdown: ${hrs}h ${mins}m ${secs}s`;
+    },1000);
 
-    function calculateRebirthCost(){
-      return 100000 * Math.pow(2, state.rebirths);
-    }
+    function calculateRebirthCost(){ return 100000 * Math.pow(2, state.rebirths); }
     document.getElementById("rebirthBtn").addEventListener("click", ()=>{
       if(state.score >= calculateRebirthCost()){
-        state.score = 0;
-        state.power = 1;
-        state.autoClickers = 0;
-        state.multiplier = 1;
-        state.rebirths++;
-        state.rebirthPoints += 5;
+        state.score = 0; state.power = 1; state.autoClickers = 0; state.multiplier = 1;
+        state.rebirths++; state.rebirthPoints += 5;
         updateUI();
       }
     });
 
-    cosmeticBtns.forEach(btn=>{
-      btn.addEventListener("click", ()=>{
-        if(btn.dataset.cost && state.score >= Number(btn.dataset.cost)){
-          state.score -= Number(btn.dataset.cost);
-          applyCosmetic(btn.dataset.type, btn.dataset.value);
-          btn.disabled = true;
-          updateUI();
-        }
-        if(btn.dataset.rpcost && state.rebirthPoints >= Number(btn.dataset.rpcost)){
-          state.rebirthPoints -= Number(btn.dataset.rpcost);
-          applyCosmetic(btn.dataset.type, btn.dataset.value);
-          btn.disabled = true;
+    // Upgrades
+    const upgrades = ["Power","Auto","Multi","Mega","Boost","SuperPower","UltraMulti"];
+    upgrades.forEach(name=>{
+      document.getElementById("buy"+name).addEventListener("click", ()=>{
+        let cost = state["cost"+name];
+        if(state.score >= cost){
+          state.score -= cost;
+          if(name==="Power") state.power++;
+          if(name==="Auto") state.autoClickers++;
+          if(name==="Multi") state.multiplier *= 2;
+          if(name==="Mega") state.multiplier *= 5;
+          if(name==="Boost") state.autoClickers += 10;
+          if(name==="SuperPower") state.power += 50;
+          if(name==="UltraMulti") state.multiplier *= 10;
+          state["cost"+name] = Math.floor(cost * (name==="Multi"||name==="Mega"||name==="UltraMulti"?2.5:1.7));
           updateUI();
         }
       });
     });
 
-    function applyCosmetic(type, value){
-      if(type === "bg"){
-        document.body.style.background = value;
-      }
-      if(type === "rainbow"){
-        document.body.classList.add("rainbow-bg");
-      }
-      if(type === "effect"){
-        if(value === "glow-text"){ document.body.classList.add("glow-text"); }
-        if(value === "giant-button"){ clicker.classList.add("giant-button"); }
-        if(value === "rainbow-text"){ document.getElementById("title").classList.add("rainbow-text"); }
-        if(value === "gold-text"){ document.getElementById("title").classList.add("gold-text"); }
-        if(value === "neon-border"){ clicker.classList.add("neon-border"); }
+    // Cosmetics
+    cosmeticBtns.forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        let boughtBefore = purchasedCosmetics.has(btn.dataset.value || btn.dataset.type);
+        let canBuyCoin = btn.dataset.cost && state.score >= Number(btn.dataset.cost);
+        let canBuyRebirth = btn.dataset.rpcost && state.rebirthPoints >= Number(btn.dataset.rpcost);
+
+        if(!boughtBefore){
+          if(canBuyCoin){
+            state.score -= Number(btn.dataset.cost);
+            purchasedCosmetics.add(btn.dataset.value || btn.dataset.type);
+          } else if(canBuyRebirth){
+            state.rebirthPoints -= Number(btn.dataset.rpcost);
+            purchasedCosmetics.add(btn.dataset.value || btn.dataset.type);
+          } else { return; }
+        }
+        applyCosmetic(btn.dataset.type, btn.dataset.value);
+        updateUI();
+      });
+    });
+
+    function applyCosmetic(type,value){
+      if(type==="bg") document.body.style.background=value;
+      if(type==="rainbow") document.body.classList.add("rainbow-bg");
+      if(type==="effect"){
+        if(value==="glow-text") document.body.classList.add("glow-text");
+        if(value==="giant-button") clicker.classList.add("giant-button");
+        if(value==="rainbow-text") document.getElementById("title").classList.add("rainbow-text");
+        if(value==="gold-text") document.getElementById("title").classList.add("gold-text");
+        if(value==="neon-border") clicker.classList.add("neon-border");
       }
     }
 
-    // Hidden cat
-    let titleClicks = 0;
-    document.getElementById("title").addEventListener("click", ()=>{
-      titleClicks++;
-      if(titleClicks >= 7){
-        hiddenCat.style.display = "block";
+    // Cheat box
+    document.getElementById("useCheat").addEventListener("click", ()=>{
+      const code = cheatBox.value.trim().toUpperCase();
+      if(code==="GODMODE"||code==="RAINBOWCAT"){
+        state.score+=10000000; document.body.classList.add("rainbow-bg"); hiddenCat.style.display="block";
       }
-    });
-
-    // Cheat codes
-    document.addEventListener("keydown",(e)=>{
-      if(e.key === "g"){ state.score += 10000000; document.body.classList.add("rainbow-bg"); hiddenCat.style.display = "block"; }
-      if(e.key === "s"){ state.score += 10000; }
+      if(code==="SMALLCHEAT"){ state.score+=10000; }
+      cheatBox.value="";
+      updateUI();
     });
 
     updateUI();
